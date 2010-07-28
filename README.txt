@@ -8,3 +8,5 @@ The example file provides the ability to:
 You will need to signup for an API consumer key at dev.rummble.com first.
 
 The java class needs you to fill in the consumer key and secret. 
+
+The src has project settings for the Eclipse development environment.
