@@ -108,7 +108,7 @@ public class SignpostExample  {
 		return sb.toString();
 	}
 	
-	private static void defaultPostCall(HttpParameters params,boolean addAccessToken)
+	private static void defaultPostCall(HttpParameters params,boolean addAccessToken,boolean doPost)
 	{
 		OAuthConsumer consumer = new DefaultOAuthConsumer(consumerKey,consumerSecret);
 		// NOTE
@@ -130,12 +130,24 @@ public class SignpostExample  {
 			
 			System.setProperty( "debug", "true" );
 			
-			URL methodURL = new URL(HOST);
+			String parameters = getQueryString(params);
+			System.out.println("params = [" + parameters + "]");
+
+			String url = HOST;
+			if (!doPost)
+			{
+				// do GET
+				url = url + "/?" + parameters;
+			}
+			URL methodURL = new URL(url);
 			
 			HttpURLConnection request = (HttpURLConnection) methodURL.openConnection();
-			// Make it a POST
-			request.setDoOutput(true);
-			request.setRequestMethod("POST");
+			if (doPost)
+			{
+				// Make it a POST
+				request.setDoOutput(true);
+				request.setRequestMethod("POST");
+			}
 			
 			// sign the request
 			consumer.sign(request);
@@ -143,14 +155,15 @@ public class SignpostExample  {
 			// send the request
 			request.connect();
 			
-			// Add our additional parameters specific to this API call
-			// Here the example just adds the method
-			String parameters = getQueryString(params);
-			System.out.println("params = [" + parameters + "]");
-			OutputStreamWriter writer = new OutputStreamWriter(request.getOutputStream());
-            //write parameters
-            writer.write(parameters);
-            writer.flush();	
+			if (doPost)
+			{
+				// Add our additional parameters specific to this API call
+				// Here the example just adds the method
+				OutputStreamWriter writer = new OutputStreamWriter(request.getOutputStream());
+				//write parameters
+				writer.write(parameters);
+				writer.flush();	
+			}
 			
 			// debug
 			System.out.println(request.getResponseCode());
@@ -261,13 +274,13 @@ public class SignpostExample  {
 		//
 		// Uncomment to do a call using default java HttpUrlConnection with signpost
 		//
-		//defaultPostCall(params,true);
+		defaultPostCall(params,true,false);
 		
 
 		//
 		// Uncomment to get Apache Commons method call with signpost
 		//
-		apacheMethodCall(params,true);
+		//apacheMethodCall(params,true);
 		
 		
 		
