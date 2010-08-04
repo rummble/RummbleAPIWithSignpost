@@ -37,7 +37,8 @@ public class SignpostExample  {
 	private static String accessToken = "<set up with calls below or enter here>";
 	private static String accessSecret = "<set up with calls below or enter here>";
 	
-	private static final String HOST = "http://api.rummble.com";
+	private static final String API_ENDPOINT = "http://api.rummble.com";
+	private static final String HOST = "http://www.rummble.com";
 	
 	public static void getAccessToken()
 	{
@@ -133,7 +134,7 @@ public class SignpostExample  {
 			String parameters = getQueryString(params);
 			System.out.println("params = [" + parameters + "]");
 
-			String url = HOST;
+			String url = API_ENDPOINT;
 			if (!doPost)
 			{
 				// do GET
@@ -209,7 +210,7 @@ public class SignpostExample  {
 		consumer.setAdditionalParameters(params);
 		String parameters = getQueryString(params);
 		 // create an HTTP request to a protected resource
-        HttpGet request = new HttpGet(HOST+"?" + parameters);
+        HttpGet request = new HttpGet(API_ENDPOINT+"?" + parameters);
 
         // sign the request
         consumer.sign(request);
